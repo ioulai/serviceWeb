@@ -29,35 +29,29 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 		return $this->response->withJson($user);	
 	});
 	
-		//recuperer nom prenom en fonction du login
-		$app->get('/personne/[{login}]', function ($request, $response, $args) {
-			$sth = $this->db->prepare("SELECT nom, prenom FROM personne p join personne_login pl on p.id = pl.id where login = :login ");
+	    //recuperer nom prenom en fonction du login et mp
+		$app->get('/getPersInfo/{login}/{mp}', function ($request, $response, $args) {
+			$sth = $this->db->prepare("SELECT nom, prenom FROM personne p join personne_login pl on p.id = pl.id where login = :login and mp = :mp");
 			$sth->bindParam("login", $args['login']);
+			$sth->bindParam("mp", $args['mp']);
 			$sth->execute();
 			$todos = $sth->fetchObject();
 			return $this->response->withJson($todos);
 			});
 		
+		//connexion 
 		
-	/*	$app->get('/chambre', function ($request, $response, $args) {
-			$sth = $this->db->prepare("SELECT * FROM chambre_forte");
+			$app->get('/getConnect/{login}/{mp}', function ($request, $response, $args) {
+			$sth = $this->db->prepare("SELECT * FROM personne_login where login = :login and mp = :mp");			
+			$sth->bindParam("login", $args['login']);
+			$sth->bindParam("mp", $args['mp']);
 			$sth->execute();
-			$todos = $sth->fetchAll();
+			$todos = $sth->fetchObject();			
 			return $this->response->withJson($todos);
-		});
-		
+		});	
 		
 	
 		
-		$app->get('/personne/[{login}]&[{mp}]', function ($request, $response, $args) {
-			$sth = $this->db->prepare("SELECT nom, prenom FROM personne p join personne_login pl on p.id = pl.id where login = :login and mp = :mp");
-			$sth->bindParam("login", $args['login']&&"mp", $args['mp']);
-			//$sth->bindParam("login", $args['login']);
-			//$sth->bindParam("mp", $args['mp']);
-			$sth->execute();
-			$todos = $sth->fetchAll();
-			return $this->response->withJson($todos);
-		});
-			*/ 
-
+	
+		
 		
