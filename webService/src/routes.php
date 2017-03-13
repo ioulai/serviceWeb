@@ -16,7 +16,16 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 		$response->getBody()->write("hello, $name,$prenom");
 		return $response;
 	});
-
+		//connexion à l'application
+		$app->get('/getConnect/{login}/{mp}', function ($request, $response, $args) {
+			$sth = $this->db->prepare("SELECT * FROM personne_login where login = :login and mp = :mp");
+			$sth->bindParam("login", $args['login']);
+			$sth->bindParam("mp", $args['mp']);
+			$sth->execute();
+			$todos = $sth->fetchObject();
+			return $this->response->withJson($todos);
+		});
+		
 	
 	    //recuperer nom prenom en fonction du login et mp
 		$app->get('/getPersInfo/{login}/{mp}', function ($request, $response, $args) {
@@ -28,16 +37,7 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			return $this->response->withJson($todos);
 			});
 		
-		//connexion à l'application	
-			$app->get('/getConnect/{login}/{mp}', function ($request, $response, $args) {
-			$sth = $this->db->prepare("SELECT * FROM personne_login where login = :login and mp = :mp");			
-			$sth->bindParam("login", $args['login']);
-			$sth->bindParam("mp", $args['mp']);
-			$sth->execute();
-			$todos = $sth->fetchObject();			
-			return $this->response->withJson($todos);
-		});	
-		
+	
 			
 		
 	
