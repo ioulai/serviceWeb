@@ -16,22 +16,11 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 		$response->getBody()->write("hello, $name,$prenom");
 		return $response;
 	});
-	
-		
-		
-	
 
-	$app->get('/personnex/', function ($request, $response, $args) {	
-		$req = $this->db->prepare("SELECT nom, prenom FROM personne p join personne_login pl on p.id = pl.id where login = :login and mp = :mp");		
-		//$req->bindParam("login", $args['login']);			
-		$req->execute();
-		$user = $req->fetchAll();		
-		return $this->response->withJson($user);	
-	});
 	
 	    //recuperer nom prenom en fonction du login et mp
 		$app->get('/getPersInfo/{login}/{mp}', function ($request, $response, $args) {
-			$sth = $this->db->prepare("SELECT nom, prenom FROM personne p join personne_login pl on p.id = pl.id where login = :login and mp = :mp");
+			$sth = $this->db->prepare("SELECT * FROM personne p join personne_login pl on p.id = pl.id join patient pa on p.id = pa.id where login = :login and mp = :mp");
 			$sth->bindParam("login", $args['login']);
 			$sth->bindParam("mp", $args['mp']);
 			$sth->execute();
@@ -39,8 +28,7 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			return $this->response->withJson($todos);
 			});
 		
-		//connexion 
-		
+		//connexion à l'application	
 			$app->get('/getConnect/{login}/{mp}', function ($request, $response, $args) {
 			$sth = $this->db->prepare("SELECT * FROM personne_login where login = :login and mp = :mp");			
 			$sth->bindParam("login", $args['login']);
@@ -49,6 +37,8 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$todos = $sth->fetchObject();			
 			return $this->response->withJson($todos);
 		});	
+		
+			
 		
 	
 		
