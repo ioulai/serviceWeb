@@ -35,13 +35,7 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$sth = $this->db->prepare("SELECT * FROM personne_login where login = :login and mp = :mp");			
 			$sth->bindParam("login", $args['login']);
 			$sth->bindParam("mp", $args['mp']);
-			$sth->execute();
-			$id = $this->db->prepare("SELECT id FROM personne_login where login = :login and mp = :mp");
-			$id->bindParam("login", $args['login']);
-			$id->bindParam("mp", $args['mp']);
-			$id->execute();
-			$type='';
-			if($id == )
+			$sth->execute();						
 			$todos = $sth->fetchObject();			
 			return $this->response->withJson($todos);
 		});	
