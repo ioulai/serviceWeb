@@ -22,7 +22,7 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 	
 	    //recuperer nom prenom en fonction du login et mp
 		$app->get('/getPersInfo/{login}/{mp}', function ($request, $response, $args) {
-			$sth = $this->db->prepare("SELECT * FROM personne p join personne_login pl on p.id = pl.id join patient pa on p.id = pa.id where login = :login and mp = :mp");
+			$sth = $this->db->prepare("select P.nom, p.prenom from personne_login pl join personne p on pl.id = p.id join infirmiere i on i.id = p.id where login= :login  and mp = :mp");
 			$sth->bindParam("login", $args['login']);
 			$sth->bindParam("mp", $args['mp']);
 			$sth->execute();
