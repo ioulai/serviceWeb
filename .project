@@ -5,7 +5,18 @@
 	<projects>
 	</projects>
 	<buildSpec>
+<<<<<<< HEAD
+		<buildCommand>
+			<name>org.eclipse.wst.validation.validationbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.eclipse.wst.jsdt.core.jsNature</nature>
+=======
+	</buildSpec>
+	<natures>
+>>>>>>> branch 'master' of https://github.com/ioulai/serviceWeb.git
 	</natures>
 </projectDescription>

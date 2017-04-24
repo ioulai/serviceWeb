@@ -184,7 +184,10 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 					$sth->bindParam("mp", $args['mp']);
 					$sth->execute();
 					$todos = $sth->fetchObject();
-					return $this->response->withJson($todos);
+					return $this->response->withJson($todos)
+					->withHeader('Access-Control-Allow-Origin', '*')
+					->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+					->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 				});*/
 /**************************************************************FIN REQUETE GET**********************************************************************/			
 
@@ -205,8 +208,13 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$todos = $sth->fetchObject();
 			return $this->response->withJson($todos)
 			->withHeader('Access-Control-Allow-Origin', '*')
+<<<<<<< HEAD
 				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
 				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+=======
+			->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+			->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+>>>>>>> refs/remotes/origin/master
 			
 		});
 		
@@ -219,8 +227,13 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$todos = $sth->fetchObject();
 			return $this->response->withJson($todos)
 			->withHeader('Access-Control-Allow-Origin', '*')
+<<<<<<< HEAD
 				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
 				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+=======
+			->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+			->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+>>>>>>> refs/remotes/origin/master
 		});
 			//modification du nom, prenom d'une personne
 			$app->put('/setPers/', function ($request, $response) {
