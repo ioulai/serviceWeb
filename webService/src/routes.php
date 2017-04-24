@@ -202,7 +202,10 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$sth->bindParam("infirmiere_souhait", $args['infirmiere_souhait']);
 			$sth->execute();
 			$todos = $sth->fetchObject();
-			return $this->response->withJson($todos);
+			return $this->response->withJson($todos)
+			->withHeader('Access-Control-Allow-Origin', '*')
+				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 			
 		});
 		
@@ -213,7 +216,10 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$sth->bindParam("mp", $args['mp']);
 			$sth->execute();
 			$todos = $sth->fetchObject();
-			return $this->response->withJson($todos);
+			return $this->response->withJson($todos)
+			->withHeader('Access-Control-Allow-Origin', '*')
+				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
 		});
 			//modification du nom, prenom d'une personne
 			$app->put('/setPers/', function ($request, $response) {
