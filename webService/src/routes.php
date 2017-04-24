@@ -45,8 +45,137 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			->withHeader('Access-Control-Allow-Origin', '*')
 			->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
 			->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-		});	
+		});
 			
+			//retourne nom, prénom avec le login passé en paramètre
+			$app->get('/getLogin/{login}', function ($request, $response, $args) use($app) {
+				$mp=$request->getAttribute('route')->getArgument('mp');
+				//$mp = "glagaffe";
+				$sth = $this->db->prepare("SELECT * FROM personne_login WHERE login = :login AND mp = MD5(:mp)");
+				$sth->bindParam("login", $args['login']);
+				$sth->bindParam("mp", $mp);
+				$sth->execute();
+				$response = $sth->fetchObject();
+			
+				return $this->response->withJson($response)
+				->withHeader('Access-Control-Allow-Origin', '*')
+				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+			});
+			//Retourne une personne dont l'id est passé en parametre
+			$app->get('/getPers/{id}', function ($request, $response, $args) {
+				$sth = $this->db->prepare("SELECT * FROM personne WHERE id = :id ");
+				$sth->bindParam("id", $args['id']);
+				$sth->execute();
+				$response = $sth->fetchObject();
+			
+				return $this->response->withJson($response)
+				->withHeader('Access-Control-Allow-Origin', '*')
+				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+			});
+			
+				//retourne toutes les infos de la personne dont le nom et le prenom sont passés en paramètre
+				$app->get('/getPersInfo/{nom}/{prenom}', function ($request, $response, $args) {
+					$sth = $this->db->prepare("SELECT * FROM personne WHERE nom = :nom and prenom = :prenom");
+					$sth->bindParam("nom", $args['nom']);
+					$sth->bindParam("prenom", $args['prenom']);
+					$sth->execute();
+					$response = $sth->fetchObject();
+				
+					return $this->response->withJson($response)
+					->withHeader('Access-Control-Allow-Origin', '*')
+					->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+					->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+				});
+				//retourne l'infirmière dont l'id est passé en paramètre
+				$app->get('/getInf/{id}', function ($request, $response, $args) {
+					$sth = $this->db->prepare("SELECT id_badge, id_infirmiere, fichier_photo FROM infirmiere i JOIN infirmiere_badge ib ON i.id = ib.id_infirmiere WHERE id_badge = :id ");
+					$sth->bindParam("id", $args['id']);
+					$sth->execute();
+					$response = $sth->fetchObject();
+				
+					return $this->response->withJson($response)
+					->withHeader('Access-Control-Allow-Origin', '*')
+					->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+					->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+				});
+				
+				
+					//retourne le type de soin dont l'id est passé en paramètre
+					$app->get('/getTypeSoin/{id}', function ($request, $response, $args) {
+						$sth = $this->db->prepare("SELECT * FROM type_soins WHERE id_type_soins = :id ");
+						$sth->bindParam("id", $args['id']);
+						$sth->execute();
+						$json = array();
+						while($row = $sth->fetch (PDO::FETCH_ASSOC))
+						{
+							$json[]=array_map('utf8', $row);
+						}
+						$response = $json;
+					
+						return $this->response->withJson(json_encode($response))
+						->withHeader('Access-Control-Allow-Origin', '*')
+						->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+						->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+					});
+					
+						//recupére toutes les visites, le paramètre ne sert à rien
+						$app->get('/visite/{infirmiere}', function ($request, $response, $args) {
+							$sth = $this->db->prepare("SELECT nom AS title, DATE(date_prevue) AS start FROM visite JOIN PATIENT ON VISITE.patient = PATIENT.id JOIN PERSONNE ON PATIENT.id = PERSONNE.id where infirmiere = :infirmiere");
+							$sth->bindParam("infirmiere", $args['infirmiere']);
+							$sth->execute();
+							$json = array();
+							while($row = $sth->fetch (PDO::FETCH_ASSOC))
+							{
+								$json[]=array_map('utf8', $row);
+							}
+							$response = $json;
+						
+							return $this->response->withJson($response)
+							->withHeader('Access-Control-Allow-Origin', '*')
+							->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+							->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+						});
+						
+							//Recupére les visites pour la date passée en paramètres
+							$app->get('/getVisiteSemaine/{date}', function ($request, $response, $args) {
+								$sth = $this->db->prepare("SELECT * FROM visite WHERE date_prevue = :date");
+								$sth->bindParam("date", $args['date']);
+								$sth->execute();
+								$json = array();
+								while($row = $sth->fetch (PDO::FETCH_ASSOC))
+								{
+									$json[]=array_map('utf8', $row);
+								}
+								$response = $json;
+							
+								return $this->response->withJson(json_encode($response))
+								->withHeader('Access-Control-Allow-Origin', '*')
+								->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+								->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+							});
+							
+								//retourne les specialites de l'infirmiere dont l'id est passé en paramètre
+								$app->get('/getSpeInf/{id}', function ($request, $response, $args) {
+									$sth = $this->db->prepare("SELECT * FROM specialisation s JOIN infirmiere i ON s.id_infirmiere = i.id
+																  JOIN type_soins ts ON s.id_type_soins = ts.id_type_soins
+																  JOIN categ_soins cs ON s.id_categ_soins = cs.id
+																  WHERE s.id_infirmiere = :id");
+									$sth->bindParam("id", $args['id']);
+									$sth->execute();
+									$json = array();
+									while($row = $sth->fetch (PDO::FETCH_ASSOC))
+									{
+										$json[]=array_map('utf8', $row);
+									}
+									$response = $json;
+								
+									return $this->response->withJson(json_encode($response))
+									->withHeader('Access-Control-Allow-Origin', '*')
+									->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+									->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+								});
 		//	Visualisation du planning passé ou à venir de l'infirmiere	
 			/*	$app->get('/getPlanning/{login}/{mp}', function ($request, $response, $args) {
 					$sth = $this->db->prepare("SELECT login, mp FROM personne_login where login = :login and mp = :mp");
@@ -86,14 +215,30 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$todos = $sth->fetchObject();
 			return $this->response->withJson($todos);
 		});
-
+			//modification du nom, prenom d'une personne
+			$app->put('/setPers/', function ($request, $response) {
+				$data = $request->getParsedBody();
+				$sth = $this->db->prepare("UPDATE personne SET prenom = :prenom, nom = :nom WHERE id = :id");
+				$ticket_data = [];
+				$ticket_data['prenom'] = filter_var($data['prenom'], FILTER_SANITIZE_STRING);
+				$ticket_data['nom'] = filter_var($data['nom'], FILTER_SANITIZE_STRING);
+				$sth->bindParam("id", $args['id']);
+				$sth->bindParam("prenom", $data['prenom']);
+				$sth->bindParam("nom", $data['nom']);
+				$sth->execute();
+					
+				return $this->response->withJson($ticket_data)
+				->withHeader('Access-Control-Allow-Origin', '*')
+				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+			});
 /************************************************************** FIN REQUETE PUT ********************************************************************/			
 
 
 /**************************************************************************************************************************************************/
 /************************************************************** REQUETE POST **********************************************************************/
 /**************************************************************************************************************************************************/		
-	
+			
 		
 		
 		
@@ -106,7 +251,30 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 /**************************************************************************************************************************************************/		
 /************************************************************** REQUETE DELETE ********************************************************************/
 /**************************************************************************************************************************************************/			
-
+			//suppression connaissant l'id de la personne
+			$app->delete('/delPa/{id}', function ($request, $response, $args) {
+				$data = array("status" => "flase");
+				$sth = $this->db->prepare("DELETE FROM patient WHERE id = :id ");
+				$sth->bindParam("id", $args['id']);
+				$sth->execute();
+			
+				if($sth)
+				{
+					if($sth ->rowCount()==1)
+					{
+						$data = array("status" => "true");
+					}
+				}
+			
+				$response = $sth->fetchAll();
+			
+				return $this->response->withStatus(200)
+				->withHeader('Access-Control-Allow-Origin', '*')
+				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+				->write(json_encode($data));
+			});
+			
 		
 		
 			
