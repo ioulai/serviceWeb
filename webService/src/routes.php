@@ -208,14 +208,8 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$todos = $sth->fetchObject();
 			return $this->response->withJson($todos)
 			->withHeader('Access-Control-Allow-Origin', '*')
-<<<<<<< HEAD
-				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-=======
 			->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
 			->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
->>>>>>> refs/remotes/origin/master
-			
 		});
 		
 		//modification mot de passe patient
@@ -227,13 +221,8 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 			$todos = $sth->fetchObject();
 			return $this->response->withJson($todos)
 			->withHeader('Access-Control-Allow-Origin', '*')
-<<<<<<< HEAD
 				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-=======
-			->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
-			->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
->>>>>>> refs/remotes/origin/master
+				->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');	
 		});
 			//modification du nom, prenom d'une personne
 			$app->put('/setPers/', function ($request, $response) {
@@ -245,8 +234,7 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 				$sth->bindParam("id", $args['id']);
 				$sth->bindParam("prenom", $data['prenom']);
 				$sth->bindParam("nom", $data['nom']);
-				$sth->execute();
-					
+				$sth->execute();					
 				return $this->response->withJson($ticket_data)
 				->withHeader('Access-Control-Allow-Origin', '*')
 				->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
@@ -276,8 +264,7 @@ $app->get('/[{name}]', function ($request, $response, $args) {
 				$data = array("status" => "flase");
 				$sth = $this->db->prepare("DELETE FROM patient WHERE id = :id ");
 				$sth->bindParam("id", $args['id']);
-				$sth->execute();
-			
+				$sth->execute();			
 				if($sth)
 				{
 					if($sth ->rowCount()==1)
