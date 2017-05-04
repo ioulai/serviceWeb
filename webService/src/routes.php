@@ -18,6 +18,9 @@ $app->get ( '/hello/{name}/{prenom}', function ($request, $response, $args) {
 	$response->getBody ()->write ( "hello, $name,$prenom" );
 	return $response;
 } );
+
+	
+
 /**
  * ***********************************************************************************************************************************************
  */
@@ -148,7 +151,7 @@ $app->get ( '/getSpeInf/{id}', function ($request, $response, $args) {
 	return $this->response->withJson ( json_encode ( $response ) )->withHeader ( 'Access-Control-Allow-Origin', '*' )->withHeader ( 'Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization' )->withHeader ( 'Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS' );
 } );
 // Test si le mail est existant
-$app->get ( '/mail/{login}', function ($request, $response, $args) {
+$app->get ( '/getMail/{login}', function ($request, $response, $args) {
 	$sth = $this->db->prepare ( "select * from personne where mail =  :mail" );
 	$sth->bindParam ( "login", $args ['login'] );
 	$sth->execute ();
@@ -169,6 +172,11 @@ $app->get ( '/mail/{login}', function ($request, $response, $args) {
 /**
  * ***********************************************************************************************************************************************
  */
+	//permet au site web d'executer les requet put
+	$app->options('/{setPa:.+}', function ($request, $response, $args) {
+		return $response->withStatus(200);
+	});
+	
 // Modification patient
 $app->put ( '/setPa/{id}', function ($request, $response, $args) {
 	$sth = $this->db->prepare ( "UPDATE patient
@@ -218,7 +226,8 @@ $app->put ( '/setMP/{login}', function ($request, $response, $args) {
 /**
  * ***********************************************************************************************************************************************
  */
-
+	
+	
 // modification du nom, prenom d'une personne
 $app->post ( '/setPers/{id}', function ($request, $response, $args) {
 	$data = array (
